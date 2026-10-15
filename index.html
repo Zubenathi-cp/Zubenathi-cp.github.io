@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zubenathi | Data Science Portfolio</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1c2333;--muted:#5d6783;--accent:#2f6fed;--line:#e1e5ef}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171e2e;--text:#e8ecf6;--muted:#9aa6c4;--accent:#6b9bff;--line:#263049}}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+nav{width:240px;padding:24px 16px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--card)}
+nav h1{font-size:1.1rem;margin:0 0 4px}
+nav p{margin:0 0 20px;color:var(--muted);font-size:.85rem}
+nav button{display:block;width:100%;text-align:left;padding:10px 12px;margin:2px 0;border:0;border-radius:8px;background:none;color:var(--text);font-size:.95rem;cursor:pointer}
+nav button:hover{background:var(--bg)}
+nav button.active{background:var(--accent);color:#fff}
+nav .sep{margin:14px 12px 6px;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+main{flex:1;padding:32px;max-width:900px}
+h2{margin-top:0}
+.intro{color:var(--muted);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h3{margin:0 0 6px;font-size:1.02rem}
+.card p{margin:0 0 10px;color:var(--muted);font-size:.9rem}
+.tag{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:99px;background:var(--bg);border:1px solid var(--line);margin:0 4px 4px 0}
+a{color:var(--accent);text-decoration:none;font-size:.9rem;margin-right:12px}
+a:hover{text-decoration:underline}
+.empty{color:var(--muted)}
+section{display:none}section.show{display:block}
+@media (max-width:700px){body{flex-direction:column}nav{width:100%;height:auto;position:static;display:flex;flex-wrap:wrap;gap:4px;border-right:0;border-bottom:1px solid var(--line)}nav h1,nav p,nav .sep{width:100%;margin:0}nav button{width:auto}main{padding:20px}}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <h1>Zubenathi</h1>
+  <p>Data Science student, Eduvos</p>
+</nav>
+<main id="main"></main>
+
+<script>
+/* ============================================================
+   EDIT THIS PART ONLY. To add a project, copy one { ... } block,
+   paste it in the right list, change the words, save, then
+   git add . / git commit / git push.
+   ============================================================ */
+const GITHUB_USER = "Zubenathi-cp";
+
+const SITE = {
+  about: "I am a second-year Data Science student working towards a career in data engineering. I love Python and I am building my skills in data science, AI and machine learning. This site collects my module work and personal projects, and it updates as I learn.",
+  skills: ["Python","Jupyter","Git","Machine Learning","Data Visualisation","Software Development"]
+};
+
+const MODULES = {
+  "Data Structures & Algorithms": {
+    intro: "Arrays, OOP, algorithm analysis and more, implemented in Python.",
+    projects: [
+      { title: "Array-Based Sequences", desc: "Dynamic array and list operations with notes on time complexity.", tags: ["Python","Big-O"], repo: "", notebook: "" }
+    ]
+  },
+  "Machine Learning Algorithms": {
+    intro: "Notebooks that explain and apply core ML algorithms.",
+    projects: [
+      { title: "Feature Selection: SelectKBest vs RFE", desc: "Data preparation, SelectKBest and RFE on a pump-maintenance dataset.", tags: ["scikit-learn","Feature Selection"], repo: "", notebook: "" }
+    ]
+  },
+  "Probability & Statistics": {
+    intro: "Distributions, inference and hypothesis testing with Python.",
+    projects: []
+  },
+  "Linear Algebra": {
+    intro: "Vectors, matrices and decompositions with NumPy.",
+    projects: []
+  }
+};
+
+const PERSONAL = [
+  { title: "Global Housing Price Prediction", desc: "Machine learning model that predicts house prices from a Kaggle dataset.", tags: ["Python","Regression","Kaggle"], repo: "", notebook: "" }
+];
+/* ============================================================ */
+
+const nav = document.getElementById("nav"), main = document.getElementById("main");
+const ghLink = p => p || `https://github.com/${GITHUB_USER}`;
+
+function cards(list){
+  if(!list.length) return '<p class="empty">Coming soon. Projects will appear here as I finish them.</p>';
+  return '<div class="grid">' + list.map(p => `
+    <div class="card"><h3>${p.title}</h3><p>${p.desc}</p>
+    <div>${(p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+    <div style="margin-top:8px"><a href="${ghLink(p.repo)}" target="_blank" rel="noopener">GitHub</a>${p.notebook?`<a href="${p.notebook}" target="_blank" rel="noopener">Notebook</a>`:""}</div></div>`).join("") + '</div>';
+}
+
+const pages = [
+  { id:"home", label:"Home", html:`<h2>Hi, I'm Zubenathi</h2><p class="intro">${SITE.about}</p>
+    <div>${SITE.skills.map(s=>`<span class="tag">${s}</span>`).join("")}</div>
+    <p style="margin-top:20px"><a href="https://github.com/${GITHUB_USER}" target="_blank" rel="noopener">My GitHub profile</a></p>` }
+];
+nav.insertAdjacentHTML("beforeend", '<div class="sep">Modules</div>');
+Object.entries(MODULES).forEach(([name,m],i)=>pages.push({id:"m"+i,label:name,group:"mod",html:`<h2>${name}</h2><p class="intro">${m.intro}</p>${cards(m.projects)}`}));
+pages.push({id:"personal",label:"Personal Projects",group:"extra",html:`<h2>Personal Projects</h2><p class="intro">Things I build for fun and to grow my skills.</p>${cards(PERSONAL)}`});
+pages.push({id:"live",label:"Latest on GitHub",group:"extra",html:`<h2>Latest on GitHub</h2><p class="intro">Pulled live from my GitHub account, so it updates by itself when I push.</p><div id="live" class="grid"><p class="empty">Loading...</p></div>`});
+
+nav.innerHTML = `<h1>Zubenathi</h1><p>Data Science student, Eduvos</p>`;
+let lastGroup = null;
+pages.forEach(p=>{
+  if(p.group==="mod" && lastGroup!=="mod") nav.insertAdjacentHTML("beforeend",'<div class="sep">Modules</div>');
+  if(p.group==="extra" && lastGroup!=="extra") nav.insertAdjacentHTML("beforeend",'<div class="sep">More</div>');
+  lastGroup = p.group || lastGroup;
+  const b = document.createElement("button"); b.textContent = p.label; b.dataset.id = p.id;
+  b.onclick = () => show(p.id); nav.appendChild(b);
+  const s = document.createElement("section"); s.id = p.id; s.innerHTML = p.html; main.appendChild(s);
+});
+
+function show(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("show", s.id===id));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
+  history.replaceState(null,"","#"+id);
+  if(id==="live") loadRepos();
+}
+
+let loaded = false;
+async function loadRepos(){
+  if(loaded) return; loaded = true;
+  const box = document.getElementById("live");
+  try{
+    const r = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=9`);
+    if(!r.ok) throw new Error(r.status);
+    const repos = (await r.json()).filter(x=>!x.fork);
+    box.innerHTML = repos.length ? repos.map(x=>`<div class="card"><h3>${x.name}</h3><p>${x.description||"No description yet."}</p>
+      ${x.language?`<span class="tag">${x.language}</span>`:""}<span class="tag">Updated ${new Date(x.pushed_at).toLocaleDateString()}</span>
+      <div style="margin-top:8px"><a href="${x.html_url}" target="_blank" rel="noopener">Open repo</a></div></div>`).join("")
+      : '<p class="empty">No public repositories yet.</p>';
+  }catch(e){
+    loaded = false;
+    box.innerHTML = '<p class="empty">Could not load GitHub right now. Please try again later.</p>';
+  }
+}
+
+show(location.hash.slice(1) && document.getElementById(location.hash.slice(1)) ? location.hash.slice(1) : "home");
+</script>
+</body>
+</html>
