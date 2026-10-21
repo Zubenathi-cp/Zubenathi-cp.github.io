@@ -79,6 +79,29 @@ h2{font-size:clamp(1.8rem,4vw,2.5rem);margin:0 0 8px;letter-spacing:-.01em}
 .stack{display:flex;flex-wrap:wrap;gap:10px}
 .stack span{padding:8px 16px;border-radius:10px;background:var(--panel);border:1px solid var(--line)}
 footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+.tl em{display:block;font-style:normal;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.78rem;color:var(--soft)}
+.qual{display:grid;gap:18px}
+.qhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.status{font-size:.75rem;padding:2px 10px;border-radius:99px;border:1px solid var(--line);color:var(--soft)}
+.status.done{background:var(--text);color:var(--bg);border-color:var(--text)}
+.rh{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end;margin-bottom:28px}
+.rgrid{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start}
+.pcard{position:sticky;top:88px}
+.badge{align-self:flex-start;font-size:.78rem;padding:3px 12px;border-radius:99px;border:1px solid var(--line);color:var(--soft)}
+.rows{display:grid;gap:10px;font-size:.92rem;margin:6px 0}
+.rows div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.rows span{color:var(--muted)}
+.rows a,.rows b{text-align:right;font-weight:500;word-break:break-word}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px}
+.cols h3,.rside>h3{margin:0 0 16px;font-size:1.15rem}
+@media (max-width:820px){.rgrid,.cols{grid-template-columns:1fr}.pcard{position:static}}
+@media print{
+:root{--bg:#fff!important;--panel:#fff!important;--text:#111!important;--muted:#333!important;--soft:#333!important;--line:#ccc!important;--accent:#111!important}
+body{background:#fff}
+header,footer,.noprint,main>*:not(#resume){display:none!important}
+#resume{border:0;padding:0}.pcard{position:static}
+.tl div::before{box-shadow:none}
+}
 @media (max-width:820px){.hero .wrap{grid-template-columns:1fr}.photo-wrap{order:-1;width:min(80%,300px)}.bar nav{gap:14px;font-size:.88rem}}
 @media (prefers-reduced-motion:reduce){.chip{animation:none}html{scroll-behavior:auto}}
 </style>
@@ -87,7 +110,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
 <header><div class="bar">
   <a class="logo" href="#top" aria-label="Home">Z</a>
   <nav>
-    <a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#stack">Stack</a><a href="#github">GitHub</a><a href="#contact">Contact</a>
+    <a href="#projects">Projects</a><a href="#services">Services</a><a href="#qualifications">Qualifications</a><a href="#resume">Resume</a><a href="#github">GitHub</a><a href="#contact">Contact</a>
   </nav>
 </div></header>
 
@@ -127,16 +150,44 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   <div class="grid" id="projGrid"></div>
 </div></section>
 
-<section id="journey"><div class="wrap">
-  <h2>Journey</h2>
-  <p class="sub">How I got here and where I am heading.</p>
-  <div class="tl" id="tl"></div>
+<section id="services"><div class="wrap">
+  <h2>Services offered</h2>
+  <p class="sub">Data work I can help with. Message me with what you need and we can agree on the scope and timing.</p>
+  <div class="grid" id="svcGrid"></div>
 </div></section>
 
-<section id="stack"><div class="wrap">
-  <h2>Stack</h2>
-  <p class="sub">Tools I use and the topics I am learning.</p>
-  <div class="stack" id="stackList"></div>
+<section id="qualifications"><div class="wrap">
+  <h2>Qualifications</h2>
+  <p class="sub">My completed and in-progress studies, with the modules covered.</p>
+  <div class="qual" id="qualList"></div>
+</div></section>
+
+<section id="resume"><div class="wrap">
+  <div class="rh">
+    <div><h2 style="margin:0">Resume</h2><p class="sub" style="margin:6px 0 0">Education, experience and skills.</p></div>
+    <div class="btns noprint">
+      <a class="btn main" id="cvView" target="_blank" rel="noopener" hidden>View CV</a>
+      <a class="btn" id="cvDown" download hidden>Download CV</a>
+      <button class="btn" id="savePdf" type="button">Save as PDF</button>
+    </div>
+  </div>
+  <div class="rgrid">
+    <aside class="card pcard">
+      <span class="badge" id="pStatus" hidden></span>
+      <h3 id="pName" style="font-size:1.4rem"></h3>
+      <span class="role mono" id="pRole" style="margin:0"></span>
+      <div class="rows" id="pRows"></div>
+      <div class="btns noprint" id="pBtns"></div>
+    </aside>
+    <div class="rside">
+      <div class="cols">
+        <div><h3>Education</h3><div class="tl" id="eduTl"></div></div>
+        <div><h3>Experience and leadership</h3><div class="tl" id="expTl"></div></div>
+      </div>
+      <h3>Skills</h3>
+      <div class="stack" id="stackList"></div>
+    </div>
+  </div>
 </div></section>
 
 <section id="github"><div class="wrap">
@@ -148,6 +199,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
 <section id="contact"><div class="wrap">
   <h2>Get in touch</h2>
   <p class="sub" id="contactText"></p>
+  <div class="rows" id="cRows" style="max-width:520px;margin-bottom:20px"></div>
   <div class="btns" id="contactBtns"></div>
 </div></section>
 </main>
@@ -166,9 +218,12 @@ const ME = {
   lead: "Second-year Data Science student at Eduvos, Nelson Mandela Bay, working towards a career in data engineering. This site collects my module work and personal projects, and it grows as I learn.",
   location: "Port Elizabeth, South Africa",
   linkedin: "https://www.linkedin.com/in/zubenathi-mateza-a012b9235/",
-  cv: "",                // for a CV button: put cv.pdf in this folder and write "cv.pdf"
+  cv: "",                // for CV buttons: put your CV in this folder as cv.pdf, then write "cv.pdf" here
+  phone: "",             // optional, e.g. "+27 71 234 5678"
+  status: "Open to internships and learning opportunities",   // small badge on the resume card, "" hides it
   email: "zubenathimatezanozulu@gmail.com",   // set to "" to hide the email button
-  photoShape: "hexagon"  // choose one: "hexagon", "oval" or "rounded"
+  photoShape: "hexagon", // choose one: "hexagon", "oval" or "rounded"
+  details: [["Licence","Code 10 heavy vehicle"]]   // extra lines on the resume card, [] for none
 };
 
 /* COLOURS (charcoal, black and white): change the hex codes.
@@ -184,13 +239,37 @@ const PROJECTS = [
   { cat:"Personal", title:"Global Housing Price Prediction", desc:"A machine learning model that predicts house prices from a Kaggle dataset.", tags:["Python","Regression","Kaggle"], repo:"", notebook:"" }
 ];
 
-/* JOURNEY: newest at the bottom */
-const JOURNEY = [
-  { title:"Higher Certificate in Software Development", note:"Completed. My start in programming." },
-  { title:"BSc Data Science at Eduvos", note:"Second year, Nelson Mandela Bay campus." },
-  { title:"Student Representative Council member", note:"Leadership and communication on campus." },
-  { title:"Data engineering study roadmap", note:"Self-directed, building towards a data engineering career." }
+/* SERVICES: keep only the ones you are confident delivering. Copy a { } block to add more. */
+const SERVICES = [
+  { title:"Data Cleaning and Preparation", desc:"Fixing missing values, duplicates, wrong formats and inconsistent labels so your data is ready to use." },
+  { title:"Data Analysis and Insights", desc:"Exploring your dataset to find patterns, summarise results and answer your questions." },
+  { title:"Data Visualisation", desc:"Clear charts and graphs in Python that make the story in your data easy to see." },
+  { title:"Excel and CSV Organisation", desc:"Structuring, merging and tidying spreadsheets and CSV files so they are easy to work with." },
+  { title:"Report Writing and Summaries", desc:"Plain-language write-ups that explain what the numbers mean and what to do next." },
+  { title:"Machine Learning Prototypes", desc:"Simple prediction and classification models built with scikit-learn, like the ones in my projects." },
+  { title:"Feature Selection and ML Data Prep", desc:"Preparing data for modelling and picking the most useful variables with methods such as SelectKBest and RFE." },
+  { title:"Python Scripting and Automation", desc:"Small scripts that automate repetitive data tasks and save you time." },
+  { title:"SQL Queries and Database Basics", desc:"Writing queries to pull, filter and summarise data from tables." },
+  { title:"Python and Data Tutoring", desc:"Helping fellow students learn Python basics, data handling and core machine learning ideas." }
 ];
+
+/* QUALIFICATIONS: status "Completed" shows a white badge. Add the module list once you have it. */
+const QUALIFICATIONS = [
+  { title:"Data Science, second year", place:"Eduvos, Nelson Mandela Bay", status:"In progress", note:"Current modules:", modules:["Data Structures and Algorithms","Machine Learning Algorithms","Probability and Statistics","Linear Algebra"] },
+  { title:"Higher Certificate in Software Development", place:"", status:"Completed", note:"Module list coming soon.", modules:[] }
+];
+
+/* RESUME: newest first. Leave place "" if you do not want it shown. */
+const RESUME = {
+  education: [
+    { period:"In progress", title:"Data Science, second year", place:"Eduvos, Nelson Mandela Bay", note:"Data Structures and Algorithms, Machine Learning Algorithms, Probability and Statistics, Linear Algebra." },
+    { period:"Completed", title:"Higher Certificate in Software Development", place:"", note:"" }
+  ],
+  experience: [
+    { period:"Current", title:"Student Representative Council member", place:"Eduvos, Nelson Mandela Bay", note:"Leadership and communication responsibilities on campus." },
+    { period:"Ongoing", title:"Self-directed data engineering study", place:"", note:"Following a structured study roadmap towards a data engineering career." }
+  ]
+};
 
 const STACK = ["Python","Jupyter","Git and GitHub","SQL","NumPy","Pandas","scikit-learn","Data visualisation","Linear algebra","Probability and statistics"];
 /* ================================================================ */
@@ -210,7 +289,7 @@ $("pw").dataset.shape = ME.photoShape;
 $("pic").src = "photo.jpg";               /* put your picture in this folder as photo.jpg */
 $("gh").href = ghUrl;
 if(ME.linkedin){ $("li").href = ME.linkedin; $("li").hidden = false; }
-if(ME.cv){ $("cv").href = ME.cv; $("cv").hidden = false; }
+if(ME.cv){ $("cv").href = ME.cv; $("cv").hidden = false; $("cvView").href = ME.cv; $("cvDown").href = ME.cv; $("cvView").hidden = false; $("cvDown").hidden = false; }
 
 /* Projects with filter pills */
 let current = "All";
@@ -226,7 +305,26 @@ function drawProjects(){
 }
 drawProjects();
 
-$("tl").innerHTML = JOURNEY.map(j=>`<div><b>${esc(j.title)}</b><span>${esc(j.note)}</span></div>`).join("");
+const tlHtml = list => list.map(j=>`<div><em>${esc(j.period)}</em><b>${esc(j.title)}</b><span>${j.place?esc(j.place)+(j.note?". ":""):""}${esc(j.note||"")}</span></div>`).join("");
+$("eduTl").innerHTML = tlHtml(RESUME.education);
+$("expTl").innerHTML = tlHtml(RESUME.experience);
+
+const mailFor = s => ME.email ? `mailto:${ME.email}?subject=${encodeURIComponent("Service enquiry: "+s)}` : (ME.linkedin||ghUrl);
+$("svcGrid").innerHTML = SERVICES.map((s,i)=>`<article class="card"><span class="cat mono">${String(i+1).padStart(2,"0")}</span><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p>
+  <div class="links"><a href="${esc(mailFor(s.title))}"${ME.email?"":' target="_blank" rel="noopener"'}>Request this service</a></div></article>`).join("");
+
+$("qualList").innerHTML = QUALIFICATIONS.map(q=>`<article class="card"><div class="qhead"><h3>${esc(q.title)}</h3><span class="status${q.status==="Completed"?" done":""}">${esc(q.status)}</span></div>
+  ${q.place?`<span class="cat">${esc(q.place)}</span>`:""}${q.note?`<p>${esc(q.note)}</p>`:""}
+  ${q.modules.length?`<div class="tags">${q.modules.map(m=>`<span class="tag mono">${esc(m)}</span>`).join("")}</div>`:""}</article>`).join("");
+
+const rowList = [["Email",ME.email,ME.email&&"mailto:"+ME.email],["Phone",ME.phone,ME.phone&&"tel:"+ME.phone.replace(/\s/g,"")],["Location",ME.location,""],
+  ["LinkedIn",ME.linkedin&&"View profile",ME.linkedin],["GitHub","@"+GITHUB_USER,ghUrl],...(ME.details||[]).map(d=>[d[0],d[1],""])].filter(r=>r[1]);
+const rowsHtml = rowList.map(r=>`<div><span>${esc(r[0])}</span>${r[2]?`<a href="${esc(r[2])}"${r[2].startsWith("http")?' target="_blank" rel="noopener"':""}>${esc(r[1])}</a>`:`<b>${esc(r[1])}</b>`}</div>`).join("");
+$("pRows").innerHTML = rowsHtml; $("cRows").innerHTML = rowsHtml;
+$("pName").textContent = ME.name; $("pRole").textContent = ME.role;
+if(ME.status){ $("pStatus").textContent = ME.status; $("pStatus").hidden = false; }
+$("pBtns").innerHTML = (ME.cv?`<a class="btn main" href="${esc(ME.cv)}" download>Download CV</a>`:"") + `<a class="btn${ME.cv?"":" main"}" href="#contact">Contact me</a>`;
+$("savePdf").onclick = () => window.print();
 $("stackList").innerHTML = STACK.map(s=>`<span>${esc(s)}</span>`).join("");
 
 $("contactText").textContent = "Open to learning opportunities, internships and collaboration. The best way to see what I am working on is my GitHub.";
