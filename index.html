@@ -66,6 +66,7 @@ h1{font-size:clamp(1.6rem,4.4vw,3.6rem);line-height:1.05;margin:0 0 10px;letter-
 .pdfpage{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(15,27,45,.18)}
 .pdfframe{width:100%;height:80vh;border:1px solid var(--line);border-radius:8px;background:#fff}
 .sg-h{margin:0 0 14px;font-size:1.15rem}
+.card.soon{border-style:dashed;background:transparent;box-shadow:none}
 button.btn{color:var(--text);font:inherit;font-weight:500;cursor:pointer}
 .btn svg{width:18px;height:18px;fill:currentColor}
 .photo-wrap{position:relative;width:min(100%,380px);aspect-ratio:1/1.12;margin:auto}
@@ -212,7 +213,7 @@ section{padding:48px 0}
 
 <section id="services"><div class="wrap">
   <h2>Services offered</h2>
-  <p class="sub">Data work I can help with. Message me with what you need and we can agree on the scope and timing.</p>
+  <p class="sub">Basic data work I can help with today. Services that need machine learning, data structures, linear algebra and probability and statistics will open as I finish those modules.</p>
   <div class="grid" id="svcGrid"></div>
 </div></section>
 
@@ -288,18 +289,22 @@ const PROJECTS = [
   { cat:"Personal", title:"Global Housing Price Prediction", desc:"A machine learning model that predicts house prices from a Kaggle dataset.", tags:["Python","Regression","Kaggle"], repo:"", notebook:"" }
 ];
 
-/* SERVICES: keep only the ones you are confident delivering. Copy a { } block to add more. */
+/* SERVICES: the first group is available now. Add soon:true to a service to show it as coming later.
+   When you finish learning it, delete soon:true and it moves to "Available now". */
+const SOON_TEXT = "Will be Available in February 2027";
 const SERVICES = [
   { title:"Data Cleaning and Preparation", desc:"Fixing missing values, duplicates, wrong formats and inconsistent labels so your data is ready to use." },
-  { title:"Data Analysis and Insights", desc:"Exploring your dataset to find patterns, summarise results and answer your questions." },
-  { title:"Data Visualisation", desc:"Clear charts and graphs in Python that make the story in your data easy to see." },
   { title:"Excel and CSV Organisation", desc:"Structuring, merging and tidying spreadsheets and CSV files so they are easy to work with." },
+  { title:"Basic Data Analysis", desc:"Summaries, totals, averages and trends that answer simple questions about your data." },
+  { title:"Data Visualisation", desc:"Clear charts and graphs in Excel, Power BI and Python that make the story in your data easy to see." },
   { title:"Report Writing and Summaries", desc:"Plain-language write-ups that explain what the numbers mean and what to do next." },
-  { title:"Machine Learning Prototypes", desc:"Simple prediction and classification models built with scikit-learn, like the ones in my projects." },
-  { title:"Feature Selection and ML Data Prep", desc:"Preparing data for modelling and picking the most useful variables with methods such as SelectKBest and RFE." },
-  { title:"Python Scripting and Automation", desc:"Small scripts that automate repetitive data tasks and save you time." },
+  { title:"Python Scripting and Automation", desc:"Small Python scripts that automate repetitive data tasks and save you time." },
   { title:"SQL Queries and Database Basics", desc:"Writing SQL queries, including in SQL Server, to pull, filter and summarise data from tables." },
-  { title:"Python and Data Tutoring", desc:"Helping fellow students learn Python basics, data handling and core machine learning ideas." }
+  { title:"Python Basics Tutoring", desc:"Helping fellow students learn Python basics and how to handle simple data." },
+  { title:"Machine Learning Models", desc:"Prediction and classification models, including data preparation and feature selection with scikit-learn.", soon:true },
+  { title:"Statistical Analysis", desc:"Probability-based analysis, hypothesis testing and a clear measure of confidence in your results.", soon:true },
+  { title:"Algorithm and Data Structure Solutions", desc:"Efficient Python solutions built with data structures and algorithm analysis.", soon:true },
+  { title:"Linear Algebra and Matrix Computing", desc:"Matrix-based calculations and numerical work in Python.", soon:true }
 ];
 
 /* QUALIFICATIONS: status "Completed" shows a white badge. Each group is a label plus a list of modules. */
@@ -369,8 +374,9 @@ drawProjects();
 
 
 const mailFor = s => ME.email ? `mailto:${ME.email}?subject=${encodeURIComponent("Service enquiry: "+s)}` : (ME.linkedin||ghUrl);
-$("svcGrid").innerHTML = SERVICES.map((s,i)=>`<article class="card"><span class="cat mono">${String(i+1).padStart(2,"0")}</span><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p>
-  <div class="links"><a href="${esc(mailFor(s.title))}"${ME.email?"":' target="_blank" rel="noopener"'}>Request this service</a></div></article>`).join("");
+$("svcGrid").innerHTML = [...SERVICES.filter(s=>!s.soon), ...SERVICES.filter(s=>s.soon)].map(s=>`<article class="card${s.soon?" soon":""}"><div class="qhead"><h3>${esc(s.title)}</h3></div>
+  <span class="status${s.soon?"":" done"}" style="align-self:flex-start">${s.soon?esc(SOON_TEXT):"Available now"}</span><p>${esc(s.desc)}</p>
+  ${s.soon?"":`<div class="links"><a href="${esc(mailFor(s.title))}"${ME.email?"":' target="_blank" rel="noopener"'}>Request this service</a></div>`}</article>`).join("");
 
 $("qualList").innerHTML = QUALIFICATIONS.map(q=>`<article class="card"><div class="qhead"><h3>${esc(q.title)}</h3><span class="status${q.status==="Completed"?" done":""}">${esc(q.status)}</span></div>
   ${q.place?`<span class="cat">${esc(q.place)}</span>`:""}${q.note?`<p>${esc(q.note)}</p>`:""}
