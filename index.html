@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- SECURITY: this policy only lets the page load files from this site, Google Fonts, the PDF viewer library
+     (cdnjs) and the GitHub API. If you ever add a new outside service, it must be added here too. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: file:; connect-src 'self' https://api.github.com; frame-src 'self' file:; worker-src 'self' blob: https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f3f6fb">
 <script>try{if(localStorage.getItem("theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}</script>
@@ -344,6 +348,7 @@ const SKILLS = [
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const safeUrl = u => /^https:\/\//i.test(u) ? u : "#";   /* only https links are allowed from GitHub data */
 const ghUrl = `https://github.com/${GITHUB_USER}`;
 
 document.title = ME.name + " | Data Science Portfolio";
@@ -408,7 +413,7 @@ $("foot").textContent = `© ${new Date().getFullYear()} ${ME.name}. Built with H
     const repos = (await r.json()).filter(x=>!x.fork && !x.name.toLowerCase().endsWith(".github.io")).slice(0,6);
     box.innerHTML = repos.length ? repos.map(x=>`<article class="card"><h3>${esc(x.name)}</h3><p>${esc(x.description||"No description yet.")}</p>
       <div class="tags">${x.language?`<span class="tag mono">${esc(x.language)}</span>`:""}<span class="tag mono">Updated ${new Date(x.pushed_at).toLocaleDateString()}</span></div>
-      <div class="links"><a href="${esc(x.html_url)}" target="_blank" rel="noopener">Open repo</a></div></article>`).join("")
+      <div class="links"><a href="${esc(safeUrl(x.html_url))}" target="_blank" rel="noopener">Open repo</a></div></article>`).join("")
       : '<p class="empty">No public repositories yet. Push a project and it will show up here.</p>';
   }catch(e){ box.innerHTML = '<p class="empty">Could not load GitHub right now. Try again later.</p>'; }
 })();
