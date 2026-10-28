@@ -20,14 +20,14 @@
    accent = buttons, soft = blue details, line/edge = borders */
 --bg:#f3f6fb;--panel:#ffffff;--text:#0f1b2d;--muted:#53627a;--accent:#1d4ed8;--soft:#2352b8;--line:#dce3ef;--edge:#b4c2d8;
 --head:rgba(243,246,251,.88);--chip:rgba(255,255,255,.96);--onaccent:#ffffff;
---g1:#0f1b2d;--g2:#2563eb;--ring:linear-gradient(160deg,#2563eb,#0d9488 55%,#93b4f5);
+--g1:#0f1b2d;--g2:#2563eb;--ring:linear-gradient(160deg,#007749,#ffb81c 50%,#002395);
 --glowc:rgba(37,99,235,.28);--glow1:rgba(37,99,235,.16);--glow2:rgba(13,148,136,.08);--dot:rgba(15,27,45,.12);
 --net:rgba(37,99,235,.35);--netfill:rgba(37,99,235,.55);--shadow:0 1px 2px rgba(15,27,45,.06),0 8px 24px rgba(15,27,45,.07)}
 /* Dark theme (charcoal, black and white), used when the moon/sun button is pressed */
 :root[data-theme="dark"]{
 --bg:#0b0b0c;--panel:#17181a;--text:#f5f5f4;--muted:#a3a5ab;--accent:#ffffff;--soft:#b9bbc2;--line:#2b2c30;--edge:#3b3c41;
 --head:rgba(11,11,12,.8);--chip:rgba(23,24,26,.92);--onaccent:#0b0b0c;
---g1:#ffffff;--g2:#8d8f96;--ring:linear-gradient(160deg,#ffffff,#6f7178 55%,#d8d9dd);
+--g1:#ffffff;--g2:#8d8f96;--ring:linear-gradient(160deg,#00a36c,#ffb81c 50%,#3b5bdb);
 --glowc:rgba(255,255,255,.2);--glow1:rgba(255,255,255,.11);--glow2:rgba(255,255,255,.04);--dot:rgba(255,255,255,.09);
 --net:rgba(255,255,255,.2);--netfill:rgba(255,255,255,.35);--shadow:none}
 *{box-sizing:border-box}
@@ -70,6 +70,12 @@ h1{font-size:clamp(1.6rem,4.4vw,3.6rem);line-height:1.05;margin:0 0 10px;letter-
 .pdfpage{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(15,27,45,.18)}
 .pdfframe{width:100%;height:80vh;border:1px solid var(--line);border-radius:8px;background:#fff}
 .sg-h{margin:0 0 14px;font-size:1.15rem}
+.greet{color:var(--soft);font-size:1.05rem;margin-bottom:6px}
+.flag{width:21px;height:14px;border-radius:2px;vertical-align:-2px;margin-right:8px;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:30px;max-width:640px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:1.2rem;line-height:1.2;color:var(--text)}
+.stat span{display:block;margin-top:3px;font-size:.78rem;line-height:1.3;color:var(--muted)}
 .seg{display:flex;gap:4px;margin:0 0 22px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel);width:fit-content;max-width:100%}
 .seg button{font:inherit;font-weight:500;color:var(--muted);background:none;border:0;border-radius:9px;padding:9px 18px;min-height:42px;cursor:pointer}
 .seg button:hover{color:var(--text)}
@@ -174,6 +180,7 @@ section{padding:48px 0}
 .rows div{flex-direction:column;gap:2px}
 .rows a,.rows b{text-align:left}
 .rh .btns{width:100%}
+.stats{grid-template-columns:repeat(2,1fr);margin-top:24px}
 .seg{width:100%}.seg button{flex:1;padding:9px 6px;font-size:.9rem}
 }
 </style>
@@ -188,6 +195,7 @@ section{padding:48px 0}
 <main id="top">
 <div class="hero" id="home"><div class="wrap">
   <div>
+    <div class="greet mono" id="greet"></div>
     <h1 id="name"></h1>
     <div class="role mono" id="role"></div>
     <p class="tagline" id="tagline"></p>
@@ -197,6 +205,7 @@ section{padding:48px 0}
       <a class="btn" id="gh" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
       <a class="btn" id="li" target="_blank" rel="noopener" hidden>LinkedIn</a>
     </div>
+    <div class="stats" id="stats"></div>
   </div>
   <div class="photo-wrap" id="pw" data-shape="hexagon">
     <svg class="net" viewBox="0 0 100 112" aria-hidden="true">
@@ -281,7 +290,8 @@ const ME = {
   role: "Data Science student and aspiring data engineer",
   tagline: "I learn Python, data and machine learning by building real projects.",
   lead: "Second-year Data Science student and SRC member at Eduvos, with hands-on experience in data analysis, Python, SQL and data cleaning. Seeking an internship or entry-level role where I can contribute, learn and grow.",
-  location: "Port Elizabeth, South Africa",
+  greeting: "Howzit, I'm",   // try "Molo, I'm", "Hi, I'm" or "" to hide
+  location: "Nelson Mandela Bay, South Africa",
   linkedin: "https://www.linkedin.com/in/zubenathi-mateza-a012b9235/",
   cv: "resume.pdf",     // your CV file. Keep it in this folder; to update your CV, replace resume.pdf
   phone: "",             // optional, e.g. "+27 71 234 5678"
@@ -344,6 +354,14 @@ const EXPERIENCE = [
     links:[["Certificate","certificates.pdf#page=1"],["Recommendation letter","certificates.pdf#page=2"]] }
 ];
 
+/* HOME STATS: four short facts shown under the buttons. Format: ["big text", "small label"] */
+const STATS = [
+  ["Year 2", "BSc IT: Data Science, Eduvos"],
+  ["Intern", "Data and analytics, 2026"],
+  ["SRC", "Elected campus representative"],
+  ["8 of 13", "Distinctions, Higher Certificate"]
+];
+
 /* DOCUMENTS shown in the Resume tab, in this order. Put each PDF in the same folder as index.html. */
 const DOCS = [
   { id:"cv", label:"CV", file:"resume.pdf", name:"Zubenathi_Mateza_CV.pdf", btn:"Download CV" },
@@ -369,7 +387,10 @@ $("name").textContent = ME.name;
 $("role").textContent = ME.role;
 $("tagline").innerHTML = `<span class="grad">${esc(ME.tagline)}</span>`;
 $("lead").textContent = ME.lead;
-$("loc").textContent = ME.location;
+const FLAG = '<svg class="flag" viewBox="0 0 90 60" aria-hidden="true"><rect width="90" height="30" fill="#DE3831"/><rect y="30" width="90" height="30" fill="#002395"/><g fill="none"><path d="M0 0L33 30L0 60M33 30H90" stroke="#fff" stroke-width="24"/></g><polygon points="0,8 0,52 24,30" fill="#FFB81C"/><g fill="none"><path d="M0 0L33 30L0 60M33 30H90" stroke="#007749" stroke-width="14"/></g><polygon points="0,14 0,46 17,30" fill="#000"/></svg>';
+$("loc").innerHTML = FLAG + esc(ME.location);
+if(ME.greeting) $("greet").textContent = ME.greeting; else $("greet").hidden = true;
+$("stats").innerHTML = STATS.map(s=>`<div class="stat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join("");
 $("pw").dataset.shape = ME.photoShape;
 $("pic").src = "photo.jpg";               /* put your picture in this folder as photo.jpg */
 $("gh").href = ghUrl;
@@ -415,7 +436,7 @@ $("contactText").textContent = "Open to learning opportunities, internships and 
 $("contactBtns").innerHTML = `<a class="btn main" href="${ghUrl}" target="_blank" rel="noopener">Visit my GitHub</a>`
   + (ME.linkedin?`<a class="btn" href="${esc(ME.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`:"")
   + (ME.email?`<a class="btn" href="mailto:${esc(ME.email)}">Email me</a>`:"");
-$("foot").textContent = `© ${new Date().getFullYear()} ${ME.name}. Built with HTML, CSS and JavaScript, hosted on GitHub Pages.`;
+$("foot").textContent = `© ${new Date().getFullYear()} ${ME.name}. Made in South Africa. Built with HTML, CSS, JavaScript and GitHub Pages.`;
 
 /* Live GitHub repos */
 (async()=>{
