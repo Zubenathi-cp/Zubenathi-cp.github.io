@@ -70,6 +70,10 @@ h1{font-size:clamp(1.6rem,4.4vw,3.6rem);line-height:1.05;margin:0 0 10px;letter-
 .pdfpage{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(15,27,45,.18)}
 .pdfframe{width:100%;height:80vh;border:1px solid var(--line);border-radius:8px;background:#fff}
 .sg-h{margin:0 0 14px;font-size:1.15rem}
+.seg{display:flex;gap:4px;margin:0 0 22px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel);width:fit-content;max-width:100%}
+.seg button{font:inherit;font-weight:500;color:var(--muted);background:none;border:0;border-radius:9px;padding:9px 18px;min-height:42px;cursor:pointer}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--accent);color:var(--onaccent)}
 .card.soon{border-style:dashed;background:transparent;box-shadow:none}
 button.btn{color:var(--text);font:inherit;font-weight:500;cursor:pointer}
 .btn svg{width:18px;height:18px;fill:currentColor}
@@ -170,6 +174,7 @@ section{padding:48px 0}
 .rows div{flex-direction:column;gap:2px}
 .rows a,.rows b{text-align:left}
 .rh .btns{width:100%}
+.seg{width:100%}.seg button{flex:1;padding:9px 6px;font-size:.9rem}
 }
 </style>
 </head>
@@ -188,7 +193,7 @@ section{padding:48px 0}
     <p class="tagline" id="tagline"></p>
     <p class="lead" id="lead"></p>
     <div class="btns">
-      <a class="btn main" id="cv" href="resume.pdf" download="Zubenathi_Mateza_Resume.pdf">Download CV</a>
+      <a class="btn main" id="cv" href="resume.pdf" download="Zubenathi_Mateza_CV.pdf">Download CV</a>
       <a class="btn" id="gh" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
       <a class="btn" id="li" target="_blank" rel="noopener" hidden>LinkedIn</a>
     </div>
@@ -235,13 +240,14 @@ section{padding:48px 0}
 
 <section id="resume"><div class="wrap">
   <div class="rh">
-    <div><h2 style="margin:0">Resume</h2><p class="sub" style="margin:6px 0 0">My CV, internship certificate and recommendation letter.</p></div>
+    <div><h2 style="margin:0">Resume</h2><p class="sub" style="margin:6px 0 0">My CV, cover letter and certificates.</p></div>
     <div class="btns noprint">
-      <a class="btn main" id="cvDown" href="resume.pdf" download="Zubenathi_Mateza_Resume.pdf">Download CV</a>
+      <a class="btn main" id="cvDown" href="resume.pdf" download="Zubenathi_Mateza_CV.pdf">Download CV</a>
       <a class="btn" id="cvView" href="resume.pdf" target="_blank" rel="noopener">Open in new tab</a>
     </div>
   </div>
-  <div class="pdfview" id="pdfView" aria-live="polite"><p class="empty">Loading resume...</p></div>
+  <div class="seg noprint" id="docTabs" role="tablist" aria-label="Documents"></div>
+  <div class="pdfview" id="pdfView" aria-live="polite"><p class="empty">Loading...</p></div>
   <h3 class="sg-h">Stack</h3>
   <div class="stack" id="stackList"></div>
 </div></section>
@@ -327,7 +333,7 @@ const QUALIFICATIONS = [
 ];
 QUALIFICATIONS.push({ title:"Data Science and Analytics Internship Certificate", place:"Future Interns", status:"Completed",
   note:"One-month internship programme, April to May 2026. Certificate of completion issued on 13 May 2026.", groups:[],
-  links:[["View certificate","resume.pdf#page=3"],["Recommendation letter","resume.pdf#page=4"]] });
+  links:[["View certificate","certificates.pdf#page=1"],["Recommendation letter","certificates.pdf#page=2"]] });
 
 /* EXPERIENCE: newest first. current:true gives the period a white badge. links are optional. */
 const EXPERIENCE = [
@@ -335,7 +341,14 @@ const EXPERIENCE = [
     points:["Elected to represent and advocate for all clubs and societies on campus.","Making sure every student finds their community and that affiliated organisations have the resources and support they need.","Leading initiatives to improve communication, streamline funding processes and improve the co-curricular experience."] },
   { title:"Data Science and Analytics Intern", place:"Future Interns, internship", period:"April 2026 - May 2026",
     points:["Worked on real-world data projects covering data analysis, cleaning and visualisation.","Applied analytical skills to draw insights and support decision-making.","Built practical knowledge of data science workflows and tools."],
-    links:[["Certificate","resume.pdf#page=3"],["Recommendation letter","resume.pdf#page=4"]] }
+    links:[["Certificate","certificates.pdf#page=1"],["Recommendation letter","certificates.pdf#page=2"]] }
+];
+
+/* DOCUMENTS shown in the Resume tab, in this order. Put each PDF in the same folder as index.html. */
+const DOCS = [
+  { id:"cv", label:"CV", file:"resume.pdf", name:"Zubenathi_Mateza_CV.pdf", btn:"Download CV" },
+  { id:"letter", label:"Cover letter", file:"cover-letter.pdf", name:"Zubenathi_Mateza_Cover_Letter.pdf", btn:"Download cover letter" },
+  { id:"certs", label:"Certificates", file:"certificates.pdf", name:"Zubenathi_Mateza_Certificates.pdf", btn:"Download certificates" }
 ];
 
 /* STACK: only the languages and tools you use. Edit, add or delete names. */
@@ -419,14 +432,24 @@ $("foot").textContent = `© ${new Date().getFullYear()} ${ME.name}. Built with H
 })();
 
 
-/* Resume PDF viewer (PDF.js draws every page, so it also works on phones) */
-const PDF_FILE = ME.cv || "resume.pdf";
+/* Resume viewer: CV, cover letter and certificates (PDF.js draws every page, so it also works on phones) */
 const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
-let pdfStarted = false, pdfDoc = null, pdfWidth = 0, pdfJob = 0, pdfTimer;
-function pdfFallback(){
+let pdfLibPromise = null, pdfDoc = null, pdfWidth = 0, pdfJob = 0, pdfTimer, curDoc = null, docsReady = false;
+const pdfCache = {};
+function loadPdfLib(){
+  if(!pdfLibPromise) pdfLibPromise = new Promise((ok, fail)=>{
+    const s = document.createElement("script");
+    s.src = PDFJS + "pdf.min.js";
+    s.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; ok(); };
+    s.onerror = fail;
+    document.head.appendChild(s);
+  });
+  return pdfLibPromise;
+}
+function pdfFallback(d){
   $("pdfView").innerHTML = window.innerWidth > 820
-    ? `<iframe class="pdfframe" src="${esc(PDF_FILE)}" title="Resume PDF"></iframe>`
-    : '<p class="empty">Your phone could not show the resume here. Use the buttons above to open or download it.</p>';
+    ? `<iframe class="pdfframe" src="${esc(d.file)}" title="${esc(d.label)}"></iframe>`
+    : '<p class="empty">Your phone could not show this document here. Use the buttons above to open or download it.</p>';
 }
 async function drawPdf(){
   const box = $("pdfView"), job = ++pdfJob, w = box.clientWidth;
@@ -438,27 +461,32 @@ async function drawPdf(){
     const vp = page.getViewport({scale:(w/base.width)*ratio});
     const c = document.createElement("canvas");
     c.width = Math.floor(vp.width); c.height = Math.floor(vp.height); c.className = "pdfpage";
-    c.setAttribute("role","img"); c.setAttribute("aria-label","Resume page " + n);
+    c.setAttribute("role","img"); c.setAttribute("aria-label", curDoc.label + " page " + n);
     await page.render({canvasContext:c.getContext("2d"), viewport:vp}).promise;
     if(job !== pdfJob) return;
     pages.push(c);
   }
   box.replaceChildren(...pages);
 }
+async function showDoc(id){
+  const d = DOCS.find(x=>x.id===id) || DOCS[0]; curDoc = d; pdfDoc = null;
+  document.querySelectorAll("#docTabs button").forEach(b=>{ const on = b.dataset.doc===d.id; b.classList.toggle("on", on); b.setAttribute("aria-selected", String(on)); });
+  $("cvDown").href = d.file; $("cvDown").setAttribute("download", d.name); $("cvDown").textContent = d.btn; $("cvView").href = d.file;
+  $("pdfView").innerHTML = '<p class="empty">Loading...</p>';
+  try{
+    await loadPdfLib();
+    if(!pdfCache[d.file]) pdfCache[d.file] = await pdfjsLib.getDocument(d.file).promise;
+    if(curDoc !== d) return;
+    pdfDoc = pdfCache[d.file]; await drawPdf();
+  }catch(e){ if(curDoc === d) pdfFallback(d); }
+}
 function startPdf(){
-  if(pdfStarted){ if(pdfDoc && $("pdfView").clientWidth !== pdfWidth) drawPdf(); return; }
-  pdfStarted = true;
-  const s = document.createElement("script");
-  s.src = PDFJS + "pdf.min.js";
-  s.onerror = pdfFallback;
-  s.onload = async () => {
-    try{
-      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js";
-      pdfDoc = await pdfjsLib.getDocument(PDF_FILE).promise;
-      await drawPdf();
-    }catch(e){ pdfFallback(); }
-  };
-  document.head.appendChild(s);
+  if(!docsReady){
+    docsReady = true;
+    $("docTabs").innerHTML = DOCS.map(d=>`<button type="button" role="tab" data-doc="${d.id}">${esc(d.label)}</button>`).join("");
+    $("docTabs").addEventListener("click", e=>{ const b = e.target.closest("button"); if(b) showDoc(b.dataset.doc); });
+    showDoc(DOCS[0].id);
+  } else if(pdfDoc && $("pdfView").clientWidth !== pdfWidth) drawPdf();
 }
 window.addEventListener("resize", ()=>{ clearTimeout(pdfTimer); pdfTimer = setTimeout(()=>{ if(pdfDoc && $("resume").classList.contains("on") && $("pdfView").clientWidth !== pdfWidth) drawPdf(); }, 250); });
 
